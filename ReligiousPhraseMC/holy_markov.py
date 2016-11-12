@@ -52,6 +52,9 @@ class Markov(object):
 class OldTestaPassagesMarkov(Markov):
     passage_num_pattern = re.compile(r'\d+:\d+')
     passage_numbers = set()
+
+    def __init__(self, filename='sources/old testament.txt'):
+        super().__init__(open_file=open(filename))
     
     def generate_markov_text(self, seed_word='', min_words=25):
         
@@ -80,7 +83,7 @@ class OldTestaPassagesMarkov(Markov):
 
         return ' '.join(gen_words)
 
-    def twitter_message(self):
+    def twitter_message(self, line_length=140):
         if not self.passage_numbers:
             for word in self.words:
                 found_pattern = self.passage_num_pattern.findall(word)
@@ -90,7 +93,7 @@ class OldTestaPassagesMarkov(Markov):
         passage_num = random.sample(self.passage_numbers, 1)[0]
         message = ''
         min_words = 15
-        while len(message) > 140 or len(message) < 1:
+        while len(message) > line_length or len(message) < 1:
             message = self.generate_markov_text(seed_word=passage_num, min_words=min_words)
             message = message.replace(passage_num+' ', '')
 

@@ -1,14 +1,16 @@
 """Coordinates the twitter api with the markov chain models"""
+import json
 
 from tweepy import Stream, OAuthHandler, API
 from tweepy.streaming import StreamListener
 
+from holy_markov import OldTestaPassagesMarkov
 from twitter_secrets import api_tokens as at
 
 
 class HolyListener(StreamListener):
-    def __init__(self):
-        self.tweetCount = 0
+
+    old_testa = OldTestaPassagesMarkov()
 
     def on_connect(self):
         print("Connection established!!")
@@ -17,9 +19,15 @@ class HolyListener(StreamListener):
         print("Connection lost!! : ", notice)
 
     def on_direct_message(self, status):
-        print("Entered on_direct_message()")
+        dm = status._json['direct message']
+        screen_name = dm['sender_screen_name']
+
+        print("Entered on_direct_message().", 'Passage sent to @' + screen_name)
+
+        passage = self.old_testa.twitter_message(line_length=(140 - len(screen_name) - 2))
+        tweet = ''.join(['@', screen_name, ' ', passage])
         try:
-            print(status, flush=True)
+            self.api.update_status(tweet)
             return True
         except BaseException as e:
             print("Failed on_direct_message()", str(e))
