@@ -62,23 +62,16 @@ def main():
 
     It watches for twitter events, and posts randomly generated holy text to twitter.
     """
-    try:
-        auth = OAuthHandler(at['CONSUMER_KEY'], at['CONSUMER_SECRET'])
-        auth.secure = True
-        auth.set_access_token(at['ACCESS_KEY'], at['ACCESS_SECRET'])
+    auth = OAuthHandler(at['CONSUMER_KEY'], at['CONSUMER_SECRET'])
+    auth.secure = True
+    auth.set_access_token(at['ACCESS_KEY'], at['ACCESS_SECRET'])
+    api = API(auth)
 
-        api = API(auth)
-
-        # If the authentication was successful, you should
-        # see the name of the account print out
-        print(api.me().name)
-
-        stream = Stream(auth, HolyListener(api=api))
-
-        stream.userstream()
-
-    except BaseException as e:
-        print("Error in main()", e)
+    # If the authentication was successful, you should
+    # see the name of the account print out
+    print(api.me().name)
+    stream = Stream(auth, HolyListener(api=api))
+    stream.userstream()
 
 
 if __name__ == '__main__':
