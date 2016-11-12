@@ -43,6 +43,15 @@ class HolyListener(StreamListener):
         print('Entered on_event()')
         print(status)
 
+    def on_status(self, status):
+        print('Entered on_status()')
+        try:
+            self.send_passage(screen_name=status._json['user']['screen_name'])
+        except BaseException as e:
+            print("Failed on_status()", str(e))
+            pprint(status._json)
+        return True
+
     def on_error(self, status):
         print('Entered on_error()')
         print(status)
