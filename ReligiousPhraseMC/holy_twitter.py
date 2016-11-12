@@ -1,5 +1,6 @@
 """Coordinates the twitter api with the markov chain models"""
 import json
+from pprint import pprint
 
 from tweepy import Stream, OAuthHandler, API
 from tweepy.streaming import StreamListener
@@ -11,6 +12,16 @@ from twitter_secrets import api_tokens as at
 class HolyListener(StreamListener):
 
     old_testa = OldTestaPassagesMarkov()
+    bot_name = 'HolyStupidArt'
+
+    def send_passage(self, screen_name):
+
+        if screen_name != self.bot_name:
+            print('Passage sent to @' + screen_name)
+            passage = self.old_testa.twitter_message(line_length=(140 - len(screen_name) - 2))
+            tweet = ''.join(['@', screen_name, ' ', passage])
+
+            self.api.update_status(tweet)
 
     def on_connect(self):
         print("Connection established!!")
@@ -19,18 +30,14 @@ class HolyListener(StreamListener):
         print("Connection lost!! : ", notice)
 
     def on_direct_message(self, status):
-        dm = status._json['direct message']
-        screen_name = dm['sender_screen_name']
-
-        print("Entered on_direct_message().", 'Passage sent to @' + screen_name)
-
-        passage = self.old_testa.twitter_message(line_length=(140 - len(screen_name) - 2))
-        tweet = ''.join(['@', screen_name, ' ', passage])
         try:
-            self.api.update_status(tweet)
-            return True
+            dm = status._json['direct_message']
+            self.send_passage(screen_name=dm['sender_screen_name'])
         except BaseException as e:
             print("Failed on_direct_message()", str(e))
+            pprint(status._json)
+
+        return True
 
     def on_event(self, status):
         print('Entered on_event()')
