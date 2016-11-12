@@ -49,13 +49,15 @@ class Markov(object):
         return ' '.join(gen_words)
 
 
-class OldTestaPassagesMarkov(mt.Markov):
+class OldTestaPassagesMarkov(Markov):
     passage_num_pattern = re.compile(r'\d+:\d+')
+    passage_numbers = set()
     
     def generate_markov_text(self, seed_word='', min_words=25):
         
         # Process a user given seed_word
-        seed_word_locations = [idx for idx, word in enumerate(self.words) if word.lower() == seed_word.lower()]
+        seed_word_locations = [idx for idx, word in enumerate(self.words)
+                                    if word.lower() == seed_word.lower()]
             
         if seed_word_locations:
             seed = random.choice(seed_word_locations)
@@ -68,7 +70,7 @@ class OldTestaPassagesMarkov(mt.Markov):
         # go until we have enough words and end in a period
         while w2[-1] != '.' or len(gen_words) < min_words:
             w1, w2 = w2, random.choice(self.cache[(w1, w2)])
-            if passage_num_pattern.findall(w2):
+            if self.passage_num_pattern.findall(w2):
                 # Avoid adding passage numbers to the middle of the passage.
                 # Also end a sentence when a passage number would have gone in.
                 new_w1 = w1.replace(':', '.').replace(';', '.')
@@ -76,7 +78,9 @@ class OldTestaPassagesMarkov(mt.Markov):
             else:                
                 gen_words.append(w2)
 
-        return ' '.join(gen_words)    def twitter_message(self):
+        return ' '.join(gen_words)
+
+    def twitter_message(self):
         if not self.passage_numbers:
             for word in self.words:
                 found_pattern = self.passage_num_pattern.findall(word)
