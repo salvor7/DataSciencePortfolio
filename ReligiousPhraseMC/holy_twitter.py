@@ -16,11 +16,6 @@ class HolyListener(StreamListener):
     def on_disconnect(self, notice):
         print("Connection lost!! : ", notice)
 
-    def on_data(self, status):
-        print("Entered on_data()")
-        print(status, flush=True)
-        return True
-
     def on_direct_message(self, status):
         print("Entered on_direct_message()")
         try:
@@ -29,7 +24,12 @@ class HolyListener(StreamListener):
         except BaseException as e:
             print("Failed on_direct_message()", str(e))
 
+    def on_event(self, status):
+        print('Entered on_event()')
+        print(status)
+
     def on_error(self, status):
+        print('Entered on_error()')
         print(status)
 
 
@@ -49,6 +49,7 @@ def main():
         # see the name of the account print out
         print(api.me().name)
 
+        stream = Stream(auth, HolyListener(api=api))
 
         stream.userstream()
 
