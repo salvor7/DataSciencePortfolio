@@ -76,4 +76,24 @@ class OldTestaPassagesMarkov(mt.Markov):
             else:                
                 gen_words.append(w2)
 
-        return ' '.join(gen_words)
+        return ' '.join(gen_words)    def twitter_message(self):
+        if not self.passage_numbers:
+            for word in self.words:
+                found_pattern = self.passage_num_pattern.findall(word)
+                if found_pattern:
+                    self.passage_numbers.add(found_pattern[0])
+
+        passage_num = random.sample(self.passage_numbers, 1)[0]
+        message = ''
+        min_words = 15
+        while len(message) > 140 or len(message) < 1:
+            message = self.generate_markov_text(seed_word=passage_num, min_words=min_words)
+            message = message.replace(passage_num+' ', '')
+
+        return message
+
+
+if __name__ == '__main__':
+    bible_gen = OldTestaPassagesMarkov(open('sources/Old testament.txt'))
+    for _ in range(10):
+        print(bible_gen.twitter_message())
