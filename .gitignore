@@ -94,3 +94,6 @@ ENV/
 # Data Files
 ReligiousPhraseMC/sources/*
 Kaggle/*
+
+# Hide Secret Files
+*secret*
