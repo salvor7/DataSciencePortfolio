@@ -40,8 +40,14 @@ class HolyListener(StreamListener):
         return True
 
     def on_event(self, status):
-        print('Entered on_event()')
-        print(status)
+        try:
+            event = status._json['event']
+        except BaseException as e:
+            print("Failed on_event()", str(e))
+            pprint(status._json)
+        else:
+            if event == 'follow':
+                self.send_passage(screen_name=status._json['source']['screen_name'])
 
     def on_status(self, status):
         print('Entered on_status()')
