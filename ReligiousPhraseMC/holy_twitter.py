@@ -60,7 +60,7 @@ class HolyListener(StreamListener):
 
     def on_error(self, status):
         print('Entered on_error()')
-        print(status)
+        pprint(status._json)
 
 
 def main():
