@@ -21,7 +21,7 @@ class HolyListener(StreamListener):
 
         if screen_name != self.bot_name:
             print('Passage sent to @' + screen_name)
-            seed_words = [screen_name, name] + text.split()
+            seed_words = [screen_name] + name.split() + text.split()
             passage = self.bible.twitter_message(seed_words=seed_words,
                                                  line_length=(140 - len(screen_name) - 2))
             tweet = ''.join(['@', screen_name, ' ', passage])
@@ -38,8 +38,8 @@ class HolyListener(StreamListener):
         try:
             dm = status._json['direct_message']
             self.send_passage(screen_name=dm['sender_screen_name'],
-                              name='',
-                              text='')
+                              name=dm['sender']['name'],
+                              text=dm['text'])
         except BaseException as e:
             print("Failed on_direct_message()", str(e))
             pprint(status._json)
@@ -55,15 +55,15 @@ class HolyListener(StreamListener):
         else:
             if event == 'follow':
                 self.send_passage(screen_name=status._json['source']['screen_name'],
-                                  name='',
-                                  text='')
+                                  name=status._json['source']['name'],
+                                  text='follow')
 
     def on_status(self, status):
         print('Entered on_status()')
         try:
             self.send_passage(screen_name=status._json['user']['screen_name'],
-                                  name='',
-                                  text='')
+                                  name=status._json['user']['screen_name'],
+                                  text=status._json['text'])
         except BaseException as e:
             print("Failed on_status()", str(e))
             pprint(status._json)
