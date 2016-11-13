@@ -2,6 +2,9 @@
 import json
 from pprint import pprint
 
+import time
+from threading import Thread
+
 from tweepy import Stream, OAuthHandler, API
 from tweepy.streaming import StreamListener
 
@@ -68,6 +71,15 @@ def main():
 
     It watches for twitter events, and posts randomly generated holy text to twitter.
     """
+    def passageEvery15():
+        old_testa = OldTestaPassagesMarkov()
+        while True:
+            time.sleep(15*60)
+            passage = old_testa.twitter_message()
+            api.update_status(passage)
+            print('Posted Tweet at {}'.format(time.localtime()[3:6]))
+
+
     auth = OAuthHandler(at['CONSUMER_KEY'], at['CONSUMER_SECRET'])
     auth.secure = True
     auth.set_access_token(at['ACCESS_KEY'], at['ACCESS_SECRET'])
@@ -76,6 +88,10 @@ def main():
     # If the authentication was successful, you should
     # see the name of the account print out
     print(api.me().name)
+
+    regular_thread = Thread(target=passageEvery15)
+    regular_thread.start()
+
     stream = Stream(auth, HolyListener(api=api))
     stream.userstream()
 
