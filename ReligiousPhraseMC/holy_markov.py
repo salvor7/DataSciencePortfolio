@@ -101,6 +101,6 @@ class OldTestaPassagesMarkov(Markov):
 
 
 if __name__ == '__main__':
-    bible_gen = OldTestaPassagesMarkov(open('sources/Old testament.txt'))
+    bible_gen = OldTestaPassagesMarkov()
     for _ in range(10):
         print(bible_gen.twitter_message())
