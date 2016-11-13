@@ -14,14 +14,16 @@ from twitter_secrets import api_tokens as at
 
 class HolyListener(StreamListener):
 
-    old_testa = BiblePassagesMarkov()
+    bible = BiblePassagesMarkov()
     bot_name = 'HolyStupidArt'
 
-    def send_passage(self, screen_name):
+    def send_passage(self, screen_name, name, text):
 
         if screen_name != self.bot_name:
             print('Passage sent to @' + screen_name)
-            passage = self.old_testa.twitter_message(line_length=(140 - len(screen_name) - 2))
+            seed_words = [screen_name, name] + text.split()
+            passage = self.bible.twitter_message(seed_words=seed_words,
+                                                 line_length=(140 - len(screen_name) - 2))
             tweet = ''.join(['@', screen_name, ' ', passage])
 
             self.api.update_status(tweet)
@@ -35,7 +37,9 @@ class HolyListener(StreamListener):
     def on_direct_message(self, status):
         try:
             dm = status._json['direct_message']
-            self.send_passage(screen_name=dm['sender_screen_name'])
+            self.send_passage(screen_name=dm['sender_screen_name'],
+                              name='',
+                              text='')
         except BaseException as e:
             print("Failed on_direct_message()", str(e))
             pprint(status._json)
@@ -50,12 +54,16 @@ class HolyListener(StreamListener):
             pprint(status._json)
         else:
             if event == 'follow':
-                self.send_passage(screen_name=status._json['source']['screen_name'])
+                self.send_passage(screen_name=status._json['source']['screen_name'],
+                                  name='',
+                                  text='')
 
     def on_status(self, status):
         print('Entered on_status()')
         try:
-            self.send_passage(screen_name=status._json['user']['screen_name'])
+            self.send_passage(screen_name=status._json['user']['screen_name'],
+                                  name='',
+                                  text='')
         except BaseException as e:
             print("Failed on_status()", str(e))
             pprint(status._json)
