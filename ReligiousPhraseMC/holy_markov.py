@@ -49,8 +49,8 @@ class Markov(object):
         return ' '.join(gen_words)
 
 
-class OldTestaPassagesMarkov(Markov):
-    passage_num_pattern = re.compile(r'\d+:\d+')
+class BiblePassagesMarkov(Markov):
+    passage_num_pattern = re.compile(r"\d+:\d+")
     passage_numbers = set()
 
     def __init__(self, filename='sources/old testament.txt'):
@@ -60,7 +60,7 @@ class OldTestaPassagesMarkov(Markov):
         
         # Process a user given seed_word
         seed_word_locations = [idx for idx, word in enumerate(self.words)
-                                    if word.lower() == seed_word.lower()]
+                               if word.lower() == seed_word.lower()]
             
         if seed_word_locations:
             seed = random.choice(seed_word_locations)
@@ -92,7 +92,7 @@ class OldTestaPassagesMarkov(Markov):
 
         passage_num = random.sample(self.passage_numbers, 1)[0]
         message = ''
-        min_words = 15
+        min_words = 20
         while len(message) > line_length or len(message) < 1:
             message = self.generate_markov_text(seed_word=passage_num, min_words=min_words)
             message = message.replace(passage_num+' ', '')
@@ -101,6 +101,6 @@ class OldTestaPassagesMarkov(Markov):
 
 
 if __name__ == '__main__':
-    bible_gen = OldTestaPassagesMarkov()
+    bible_gen = BiblePassagesMarkov()
     for _ in range(10):
         print(bible_gen.twitter_message())

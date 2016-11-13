@@ -8,13 +8,13 @@ from threading import Thread
 from tweepy import Stream, OAuthHandler, API
 from tweepy.streaming import StreamListener
 
-from holy_markov import OldTestaPassagesMarkov
+from holy_markov import BiblePassagesMarkov
 from twitter_secrets import api_tokens as at
 
 
 class HolyListener(StreamListener):
 
-    old_testa = OldTestaPassagesMarkov()
+    old_testa = BiblePassagesMarkov()
     bot_name = 'HolyStupidArt'
 
     def send_passage(self, screen_name):
@@ -72,7 +72,7 @@ def main():
     It watches for twitter events, and posts randomly generated holy text to twitter.
     """
     def passageEvery15():
-        old_testa = OldTestaPassagesMarkov()
+        old_testa = BiblePassagesMarkov()
         while True:
             time.sleep(15*60)
             passage = old_testa.twitter_message()
