@@ -1,5 +1,4 @@
 """Coordinates the twitter api with the markov chain models"""
-import json
 from pprint import pprint
 
 import time
