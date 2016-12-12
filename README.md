@@ -1,7 +1,3 @@
-# DataSciencePortfolio
-A repo of my data science projects
-
-
 ## Religious Phrase Markov Chain project
 
 A project for a stupid art party. A markov chain twitter bot (or some 

@@ -92,8 +92,7 @@ ENV/
 .idea
 
 # Data Files
-ReligiousPhraseMC/sources/*
-Kaggle/*
+sources/*
 
 # Hide Secret Files
 *secret*
