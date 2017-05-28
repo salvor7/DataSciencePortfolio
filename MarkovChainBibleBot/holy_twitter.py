@@ -1,7 +1,7 @@
 """Coordinates the twitter api with the markov chain models"""
 from pprint import pprint
-
 import time
+from random import randint
 from threading import Thread
 
 from tweepy import Stream, OAuthHandler, API
@@ -78,14 +78,13 @@ def main():
 
     It watches for twitter events, and posts randomly generated holy text to twitter.
     """
-    def passageEvery15():
+    def passageEvery(min_seconds=15*60):
         old_testa = BiblePassagesMarkov()
         while True:
-            time.sleep(15*60)
+            time.sleep(min_seconds * randint(1, 13))
             passage = old_testa.twitter_message()
             api.update_status(passage)
             print('Posted Tweet at {}'.format(time.localtime()[3:6]))
-
 
     auth = OAuthHandler(at['CONSUMER_KEY'], at['CONSUMER_SECRET'])
     auth.secure = True
@@ -96,7 +95,7 @@ def main():
     # see the name of the account print out
     print(api.me().name)
 
-    regular_thread = Thread(target=passageEvery15)
+    regular_thread = Thread(target=passageEvery)
     regular_thread.start()
 
     stream = Stream(auth, HolyListener(api=api))
