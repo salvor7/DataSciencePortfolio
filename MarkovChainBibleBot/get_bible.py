@@ -1,5 +1,5 @@
 import requests
-from os import path
+from os import path, linesep
 
 
 project_gutenberg_bible_url = 'http://www.gutenberg.org/cache/epub/10/pg10.txt'
@@ -14,7 +14,7 @@ def bible_text(url=project_gutenberg_bible_url):
 
 def process_gutenberg_bible(url=project_gutenberg_bible_url):
     """Remove header and footer info"""
-    gutenberg_header_footer_sep = '\n\r'*8
+    gutenberg_header_footer_sep = linesep*8
     header, body, footer = bible_text(url).split(gutenberg_header_footer_sep)
     return body
 
