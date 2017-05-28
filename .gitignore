@@ -92,7 +92,7 @@ ENV/
 .idea
 
 # Data Files
-sources/*
+data/*
 
 # Hide Secret Files
 *secret*

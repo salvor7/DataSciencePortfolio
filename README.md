@@ -1,5 +1,4 @@
-## Religious Phrase Markov Chain project
+## Markov Chain Bible Passage project
 
-A project for a stupid art party. A markov chain twitter bot (or some 
-interface) is the stupid art. The theme of the party this year is 
-religion, so the markov phrase generator is holy book based.
+A project originally for the stupid art party of 2016. 
+A markov chain twitter bot which creates speculative bible passages. 
