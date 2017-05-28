@@ -1,20 +1,16 @@
+
 import re
 import random
 
+import get_bible
+
 
 class Markov(object):
-    def __init__(self, open_file):
+    def __init__(self, text):
         self.cache = {}
-        self.open_file = open_file
-        self.words = self.file_to_words()
+        self.words = text.split()
         self.word_size = len(self.words)
         self.database()
-
-    def file_to_words(self):
-        self.open_file.seek(0)
-        data = self.open_file.read()
-        words = data.split()
-        return words
 
     def triples(self):
         """ Generates triples from the given data string. So if our string were
@@ -53,8 +49,10 @@ class BiblePassagesMarkov(Markov):
     passage_num_pattern = re.compile(r"\d+:\d+")
     passage_numbers = set()
 
-    def __init__(self, filename='sources/bible.txt'):
-        super().__init__(open_file=open(filename))
+    def __init__(self, filename=get_bible.bible_path):
+        bible_text = get_bible.process_gutenberg_bible()
+
+        super().__init__(bible_text)
     
     def generate_markov_text(self, seed_words=None, min_words=25):
 
