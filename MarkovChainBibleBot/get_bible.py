@@ -7,15 +7,16 @@ bible_filename = 'bible.txt'
 bible_path = path.join('..', 'data', bible_filename)
 
 
-def bible_text(url=project_gutenberg_bible_url):
-    """Get the bible text"""
-    return requests.get(url).text
+def save_internet_bible(url=project_gutenberg_bible_url, path=bible_path):
+    """Save bible as a text file"""
+    bible = requests.get(url).text
+
+    with open(path, 'w') as file:
+        file.write(bible)
 
 
-def process_gutenberg_bible(url=project_gutenberg_bible_url):
+def process_gutenberg_bible(text):
     """Remove header and footer info"""
-    text = bible_text(url)
-
     start_phrase = 'The First Book of Moses:  Called Genesis'
     end_phrase = 'End of the Project Gutenberg EBook of The King James Bible'
     assert text.count(start_phrase) == 1 and text.count(end_phrase) == 1
@@ -25,8 +26,11 @@ def process_gutenberg_bible(url=project_gutenberg_bible_url):
     return text[start_idx:end_idx]
 
 
-def save_internet_bible(url=project_gutenberg_bible_url):
-    """Save bible as a text file"""
-    bible = process_gutenberg_bible(url)
-    with open(bible_path, 'w') as file:
-        file.write(bible)
+def read_gutenberg_bible():
+    """Open and process the saved text of the bible"""
+    with open(bible_path, 'r') as file:
+        return process_gutenberg_bible(file.read())
+
+
+if __name__ == '__main__':
+    save_internet_bible()

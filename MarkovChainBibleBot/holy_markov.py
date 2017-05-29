@@ -49,8 +49,8 @@ class BiblePassagesMarkov(Markov):
     passage_num_pattern = re.compile(r"\d+:\d+")
     passage_numbers = set()
 
-    def __init__(self, filename=get_bible.bible_path):
-        bible_text = get_bible.process_gutenberg_bible()
+    def __init__(self):
+        bible_text = get_bible.read_gutenberg_bible()
 
         super().__init__(bible_text)
     
